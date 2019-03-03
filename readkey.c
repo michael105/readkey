@@ -1,6 +1,6 @@
 #ifdef MLIB
 #include "minilib.h"
-
+#include "minilib.c"
 #else
 
 #include <stdio.h>
@@ -141,7 +141,18 @@ char readkey_usecs( int wait, int usecs ){
 		if ( wait == -1 ) 
 				p = NULL;
 
-		int res = select( fileno( stdin )+1, &set, NULL, NULL, p );
+		int res = 0;
+		
+#ifndef X64
+	 		res = select( fileno( stdin )+1, &set, NULL,NULL, p );
+#else
+		register long int r10 asm ("r10") = 0 ; 
+		register long int r8 asm ("r8") = (long int) p ; 
+		asm volatile ("syscall" : "=a" (res) : "a" ( SCALL(select) ) , "D" (fileno(stdin)+1), "S" (&set), "d" (0), "r" (r10), "r" (r8) : "memory" );
+#endif
+		
+			//asm volatile ("syscall" : "=a" (ret) : "a" ( (23 | 0 ) ) , "D" (&fd), "S" (readfd), "d" (writefd), "r" (r10), "r" (r8) : "memory" );
+
 		if ( debug )
 				printf("res 1: %d %d\n",13,res);
 		if ( res > 0 ){

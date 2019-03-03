@@ -26,8 +26,10 @@ MLIBDIR=minilib
 # Don't create obj files, include evrything in one gcc run.(yourself)
 SINGLERUN=1
 
+NOINCLUDE=1
+
 #Set the optimization flag (default: -O1)
-#OPTFLAG=-O1
+OPTFLAG=-Os
 
 # GCC
 #GCC=gcc

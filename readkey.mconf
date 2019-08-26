@@ -25,6 +25,7 @@ mini_itodec
 mini_uitodec
 mini_fileno
 mini_fprintf
+mini_snprintf
 mini_print
 mini_fprintfs
 mini_fputs

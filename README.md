@@ -8,9 +8,9 @@ Usage: `readkey [-b] [-w secs] [-d [dotrate]]`
 
 Small program to wait for a key.
 
-    The key/modifier is printed to stdout,
-    the return code is either the error code or
-    a value describing the modifier keys.
+The key/modifier is printed to stdout,<br>
+the return code is either the error code or<br>
+a value describing the modifier keys.<br>
 
 ~~~
     parameters:

@@ -310,7 +310,7 @@ int main( int argc, char *argv[])
 		if ( b ) {
 				int it=0;
 				const char* helpstring[] = {
-"Usage: term_readkey [-b] [-w secs] [-d [dotrate]]",
+"Usage: readkey [-b] [-w secs] [-d [dotrate]]",
 "",
 "Small program to wait for a key.",
 "",
@@ -331,7 +331,7 @@ int main( int argc, char *argv[])
 "        253: Unknown Scancode",
 "          0: Ok / No modifier",
 "",
-"Example: key=`term_readkey -w 5`",
+"Example: key=`readkey -w 5`",
 "echo $key",
 "CC-BY 4.0",
 "Michael Misc Myer www.github.com/michael105/readkey"

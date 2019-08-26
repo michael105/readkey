@@ -73,11 +73,11 @@ endif
 #Compile with minilib or without
 # Will compile with minilib, if present and found in MLIBDIR
 default: 
-	$(if $(wildcard $(MLIBDIR)/Makefile.include), make with-minilib=1, make mini-gcc )
+	$(if $(wildcard $(MLIBDIR)/Makefile.include), make with-minilib=1, make readkey )
 
 
 # build with mini-gcc script
-mini-gcc: readkey
+readkey: readkey.c
 	./mini-gcc --config readkey.mconf -o readkey readkey.c
 
 # build without minilib

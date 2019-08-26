@@ -1,6 +1,5 @@
 #ifdef MLIB
 #include "minilib.h"
-#include "minilib.c"
 #else
 
 #include <stdio.h>
@@ -9,13 +8,10 @@
 #include <string.h>
 #include <sys/select.h>
 #include <sys/ioctl.h>
-
+#include <sys/termios.h>
 
 #endif
 
-
-
-#include <sys/termios.h>
 #define TTY struct termio
 
 /* Add definitions to make termio look like termios.
@@ -41,10 +37,18 @@
 #endif
 
 
-
 #ifndef NULL
 #define NULL 0
 #endif
+
+
+#ifndef POINTER
+// amd64
+#define POINTER long unsigned int
+#endif
+
+
+
 
 char *modifiers[] = { "CTRL", "ALT", "", "SHIFT" };
 char *keys[] = {"", "?", "F%u", "ESC", "INS", 
@@ -71,17 +75,17 @@ int key_output(int pmod,int pkey, int f,char*pstring){
 		/*if ( debug )
 				printf("pmod: %d, pkey: %d, f: %d\n",pmod,pkey,f);*/
 		if ( pkey == UNKNOWN ){
-				fprintf(stderr,"Unknown keycode: ");
+				fputs("Unknown keycode: ", stderr);
 				for (i=0;i<keycount;i++){
 						fprintf(stderr,"%u ",keybuf[i]);
 				}
-				fprintf(stderr,"\n");
+				fputs("",stderr);
 				return(253);
 		}
 		if ( only_key== 0 ){
 				for ( i=1; i<5; i<<=1 ){
 						if ( i & pmod ){
-								printf("%s+", modifiers[i-1] );
+								fprintfs( stdout, "%s+", modifiers[i-1] );
 						}
 				}
 		}
@@ -89,13 +93,13 @@ int key_output(int pmod,int pkey, int f,char*pstring){
 				printf(keys[FKEY], f );
 		} else {
 				if ( (pkey > 0) && (pkey < 17) ){
-						printf(keys[pkey]);
+						print(keys[pkey]);
 				} else {
 						if ( pkey ){
 								printf("%c",pkey);
 						} else {
 								if ( pstring!=0){
-										printf("%s",pstring);
+										prints(pstring);
 								}
 						}
 				}
@@ -103,13 +107,13 @@ int key_output(int pmod,int pkey, int f,char*pstring){
 		if(debug!=0){ // print the whole sequence
 				printf("\n");
 				if ( i )
-						printf("Sequence: ");
+						prints("Sequence: ");
 				else
-						printf("Key: ");
+						prints("Key: ");
 				for (i=0;i<keycount;i++){
 						printf("%d ",keybuf[i]);
 				}
-				printf("\n");
+				prints("\n");
 		}
 		if ( ret_modifier )
 				ret=pmod;
@@ -156,7 +160,7 @@ char readkey_usecs( int wait, int usecs ){
 		if ( debug )
 				printf("res 1: %d %d\n",13,res);
 		if ( res > 0 ){
-				read( fileno( stdin ), &c, 1 );
+				read( fileno( stdin ), (POINTER*)&c, 1 );
 				keybuf[keycount] = c;
 				keycount++;
 				if ( debug )
@@ -200,14 +204,14 @@ char readkey_dots( int wait, int dots ){
 		}
 
 		for ( a = 0; a < loops; a++ ){
-				fprintf( stderr, "." );
+				fprint( stderr, "." );
 				res = readkey_usecs( wait, usecs );
 				if ( res != 0 ){ // got a result, could also be -1 (means error)
-						fprintf( stderr, "\n" );
+						fputs( "", stderr );
 						return( res );
 				}
 		}
-		fprintf( stderr, "\n" );
+		fputs( "", stderr );
 		return( res );
 }
 
@@ -334,8 +338,8 @@ int main( int argc, char *argv[])
 				};
 			//	tcsetattr( fileno( stdin ), TCSANOW, &oldSettings );
 				while (helpstring[it] != 0 ){ 
-						fprintf(stderr,helpstring[it++]);
-						fprintf(stderr,"\n");
+						fprint(stderr,helpstring[it++]);
+						fprint(stderr,"\n");
 				}
 
 				return(0);
@@ -370,7 +374,7 @@ AGAIN:
 						exit(254); // timeout
 						break;
 				case -1 : 
-						fprintf(stderr,"Readkey: An unknown error occured");
+						fprint(stderr,"Readkey: An unknown error occured");
 						exit(255); // select error
 						break;
 				K(9,TAB);

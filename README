@@ -1,4 +1,9 @@
-Usage: term_readkey [-b] [-w secs] [-d [dotrate]]
+READKEY
+
+Tiny tool (statically linked, amd64: 8.5KB) to read (blocking and nonblocking) keyboard input.
+
+
+Usage: readkey [-b] [-w secs] [-d [dotrate]]
 
 Small program to wait for a key.
 
